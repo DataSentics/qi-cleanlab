@@ -607,7 +607,7 @@ def _compute_overlooked_box_scores_for_image(
 
     for iid, k in enumerate(pred_labels):
         if pred_label_probs[iid] < high_probability_threshold or np.any(iou_matrix[:, iid] > 0):
-            scores_overlooked[iid] = np.nan
+            scores_overlooked[iid] = 1.0
             continue
 
         k_similarity = similarity_matrix[lab_labels == k, iid]
@@ -745,7 +745,7 @@ def _compute_badloc_box_scores_for_image(
         k_iou = iou_matrix[iid, pred_labels == k]
 
         if len(k_pred) == 0 or np.max(k_pred) <= low_probability_threshold:
-            scores_badloc[iid] = 1.0
+            scores_badloc[iid] = 0.0
             continue
 
         idx_at_least_low_probability_threshold = np.where(k_pred > low_probability_threshold)[0]
@@ -757,7 +757,7 @@ def _compute_badloc_box_scores_for_image(
         k_similarity = k_similarity[combined_idx]
         k_pred = k_pred[combined_idx]
 
-        scores_badloc[iid] = np.max(k_similarity) if len(k_pred) > 0 else 1.0
+        scores_badloc[iid] = np.max(k_similarity) if len(k_pred) > 0 else 0.0
     return scores_badloc
 
 
